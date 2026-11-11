@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recherche logement Rawai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;700&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sea:#0f5c6e; --sea-2:#167a8f; --sand:#fbf5ea; --sun:#f2a541;
+    --ink:#1f2a30; --mute:#6b7880; --card:#ffffff;
+    --ok:#2e9e5b; --ok-bg:#e6f6ec; --no:#d1495b; --no-bg:#fbe9eb; --wait:#e08a1e; --wait-bg:#fdf1e0;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--sand);color:var(--ink);font-family:"Sarabun",system-ui,sans-serif;font-size:17px}
+  .hero{background:linear-gradient(160deg,var(--sea) 0%,var(--sea-2) 100%);color:#fff;padding:28px 22px 70px;text-align:center;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-40px;height:80px;background:var(--sand);border-radius:50% 50% 0 0}
+  .kicker{font-family:"Prompt",sans-serif;letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;opacity:.8}
+  h1{font-family:"Prompt",sans-serif;font-size:2.1rem;margin:6px 0 2px;line-height:1.15}
+  .sub{opacity:.85;margin:0}
+  .dates{display:inline-block;margin-top:18px;background:var(--sun);color:#3a2300;border-radius:999px;padding:10px 22px;font-family:"Prompt",sans-serif;font-weight:700;font-size:1.35rem;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+  .dates small{display:block;font-family:"Sarabun",sans-serif;font-weight:600;font-size:.8rem;opacity:.75}
+  .stats{display:flex;gap:12px;justify-content:center;margin:-38px auto 8px;position:relative;z-index:2;flex-wrap:wrap;padding:0 16px}
+  .stat{background:var(--card);border-radius:16px;padding:12px 20px;box-shadow:0 4px 14px rgba(15,92,110,.12);text-align:center;min-width:130px}
+  .stat b{font-family:"Prompt",sans-serif;font-size:1.6rem;color:var(--sea)}
+  .stat span{display:block;font-size:.85rem;color:var(--mute)}
+  .stat.ok b{color:var(--ok)}
+  main{max-width:1100px;margin:0 auto;padding:12px 16px 50px;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .card{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 3px 12px rgba(0,0,0,.06);border:3px solid transparent;transition:border-color .2s,background .2s}
+  .card.ok{border-color:var(--ok);background:var(--ok-bg)}
+  .card.no{border-color:var(--no);background:var(--no-bg);opacity:.85}
+  .card.wait{border-color:var(--wait);background:var(--wait-bg)}
+  .top{display:flex;align-items:flex-start;gap:12px}
+  .num{flex:0 0 36px;height:36px;border-radius:50%;background:var(--sea);color:#fff;display:grid;place-items:center;font-family:"Prompt",sans-serif;font-weight:700}
+  .name{font-family:"Prompt",sans-serif;font-weight:700;font-size:1.2rem;line-height:1.25;margin:4px 0 2px}
+  .phone{display:inline-flex;align-items:center;gap:8px;margin-top:6px;font-size:1.45rem;font-weight:700;color:var(--sea);text-decoration:none;letter-spacing:.02em}
+  .phone::before{content:"📞";font-size:1.1rem}
+  .called{display:flex;align-items:center;gap:10px;margin:14px 0 10px;padding:10px 12px;border-radius:12px;background:#f1f4f5;cursor:pointer;user-select:none;font-weight:600}
+  .called input{width:26px;height:26px;accent-color:var(--sea);margin:0}
+  .called small{color:var(--mute);font-weight:400}
+  .status{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .status button{font:inherit;border:2px solid #dde3e6;background:#fff;border-radius:12px;padding:10px 4px;cursor:pointer;line-height:1.2;font-weight:700;color:var(--ink)}
+  .status button small{display:block;font-weight:400;font-size:.75rem;color:var(--mute)}
+  .status button.on[data-v="ok"]{background:var(--ok);border-color:var(--ok);color:#fff}
+  .status button.on[data-v="no"]{background:var(--no);border-color:var(--no);color:#fff}
+  .status button.on[data-v="wait"]{background:var(--wait);border-color:var(--wait);color:#fff}
+  .status button.on small{color:rgba(255,255,255,.85)}
+  label.f{display:block;margin-top:12px;font-weight:600;font-size:.92rem}
+  label.f small{color:var(--mute);font-weight:400}
+  .price{display:flex;align-items:center;gap:8px;margin-top:4px}
+  .price input{flex:1;font:inherit;font-size:1.3rem;font-weight:700;padding:10px 12px;border:2px solid #dde3e6;border-radius:12px;background:#fff;min-width:0}
+  .price span{font-size:1.3rem;font-weight:700;color:var(--mute)}
+  textarea{width:100%;margin-top:4px;font:inherit;padding:10px 12px;border:2px solid #dde3e6;border-radius:12px;resize:vertical;min-height:52px;background:#fff}
+  input:focus,textarea:focus{outline:none;border-color:var(--sea-2)}
+  .save{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 16px;border-radius:999px;font-size:.85rem;opacity:0;transition:opacity .3s;pointer-events:none}
+  .save.show{opacity:.9}
+  .send{max-width:1100px;margin:0 auto 24px;padding:20px 16px;text-align:center}
+  .send h2{font-family:"Prompt",sans-serif;font-size:1.4rem;margin:0 0 12px;color:var(--sea)}
+  .send h2 small{font-family:"Sarabun",sans-serif;font-weight:400;font-size:.95rem;color:var(--mute)}
+  .send-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .send-btns a,.send-btns button{font:inherit;font-weight:700;font-size:1.1rem;padding:14px 26px;border-radius:14px;border:0;color:#fff;text-decoration:none;cursor:pointer;min-width:140px}
+  .send-btns .wa{background:#25a35a}
+  .send-btns .line{background:#06b33a}
+  .send-btns button{background:var(--ink)}
+  .send-btns small{font-weight:400;opacity:.8}
+  #preview{white-space:pre-wrap;text-align:left;background:#fff;border-radius:14px;padding:14px;margin:14px auto 0;max-width:600px;font-family:"Sarabun",sans-serif;font-size:.9rem;color:var(--ink);box-shadow:0 3px 12px rgba(0,0,0,.06)}
+  footer{text-align:center;color:var(--mute);font-size:.8rem;padding:0 16px 30px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="kicker">ราไวย์ · ภูเก็ต</div>
+  <h1>หาที่พักที่ราไวย์</h1>
+  <p class="sub">Recherche logement à Rawai</p>
+  <div class="dates">10 มกราคม – 10 มีนาคม 2570<small>ราคาต่อเดือน · prix au mois</small></div>
+</header>
+<div class="stats">
+  <div class="stat"><b id="sCalled">0 / 15</b><span>โทรแล้ว · appelés</span></div>
+  <div class="stat ok"><b id="sOk">0</b><span>ว่าง · dispo</span></div>
+  <div class="stat"><b id="sBest">–</b><span>ถูกที่สุด · moins cher</span></div>
+</div>
+<main id="list"></main>
+<section class="send">
+  <h2>ส่งให้สามี <small>· Envoyer à mon mari</small></h2>
+  <div class="send-btns">
+    <a id="sendWa" class="wa" target="_blank" rel="noopener">WhatsApp</a>
+    <a id="sendLine" class="line" target="_blank" rel="noopener">LINE</a>
+    <button type="button" id="sendCopy">คัดลอก <small>· copier</small></button>
+  </div>
+  <pre id="preview"></pre>
+</section>
+<footer>แตะเบอร์โทรเพื่อโทร · Touchez le numéro pour appeler</footer>
+<div class="save" id="save">บันทึกแล้ว ✓</div>
+
+<script type="application/json" id="state">{"items":[
+{"name":"Leks' Lodge","tel":"094-843-4770"},
+{"name":"Baan Pornmae","tel":"098-592-9456"},
+{"name":"Zen Suites","tel":"061-659-0054"},
+{"name":"CALYPSO Condo","tel":"095-271-7172"},
+{"name":"Sawadee Naiharn","tel":"098-880-0988"},
+{"name":"VK House Rawai","tel":"081-693-4611"},
+{"name":"Coconoi Residence","tel":"082-807-2980"},
+{"name":"PAi NoN Village","tel":"02-430-4464"},
+{"name":"Jungle Pad","tel":"082-270-1984"},
+{"name":"SaiyuanBuri","tel":"076-388-351"},
+{"name":"Ton Mai Bungalows","tel":"081-323-7534","note":"ถามว่ามีแอร์ไหม (clim ?)"},
+{"name":"Nature Pine Residence","tel":"081-496-6398"},
+{"name":"Monaburi Boutique Resort","tel":"092-892-2378"},
+{"name":"Namphung Phuket Boutique Resort","tel":"063-380-9366"},
+{"name":"New Breakers Hotel Rawai","tel":"062-989-9694"}
+]}</script>
+
+<script>
+(function(){
+  // Capture the untouched source document before rendering, to republish with new state.
+  var SRC = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  var KEY = "rawai-logement-v1";
+  var state = JSON.parse(document.getElementById("state").textContent);
+  // Fallback: local copy if the page cannot save itself.
+  try{
+    var local = JSON.parse(localStorage.getItem(KEY) || "null");
+    if(local && local.savedAt && (!state.savedAt || local.savedAt > state.savedAt)) state = local;
+  }catch(e){}
+
+  var list = document.getElementById("list");
+  var STATUS = [
+    {v:"ok", th:"ว่าง", fr:"Dispo"},
+    {v:"no", th:"ไม่ว่าง", fr:"Pas dispo"},
+    {v:"wait", th:"โทรใหม่", fr:"À rappeler"}
+  ];
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+  function render(){
+    list.innerHTML = state.items.map(function(it,i){
+      var cls = it.status ? " "+it.status : "";
+      return '<article class="card'+cls+'" data-i="'+i+'">'+
+        '<div class="top"><div class="num">'+(i+1)+'</div><div>'+
+          '<div class="name">'+esc(it.name)+'</div>'+
+          '<a class="phone" href="tel:'+it.tel.replace(/-/g,"")+'">'+esc(it.tel)+'</a>'+
+        '</div></div>'+
+        '<label class="called"><input type="checkbox" data-k="called"'+(it.called?" checked":"")+'> โทรแล้ว <small>· appelé</small></label>'+
+        '<div class="status">'+STATUS.map(function(s){
+          return '<button type="button" data-v="'+s.v+'" class="'+(it.status===s.v?"on":"")+'">'+s.th+'<small>'+s.fr+'</small></button>';
+        }).join("")+'</div>'+
+        '<label class="f">ราคา / เดือน <small>· prix par mois</small></label>'+
+        '<div class="price"><input inputmode="numeric" data-k="price" placeholder="0" value="'+esc(it.price)+'"><span>฿</span></div>'+
+        '<label class="f">หมายเหตุ <small>· notes</small></label>'+
+        '<textarea data-k="note" rows="2">'+esc(it.note)+'</textarea>'+
+      '</article>';
+    }).join("");
+    stats();
+  }
+
+  function stats(){
+    var called=0, ok=0, best=null;
+    state.items.forEach(function(it){
+      if(it.called) called++;
+      if(it.status==="ok"){ ok++;
+        var p = parseInt(String(it.price||"").replace(/[^0-9]/g,""),10);
+        if(p && (best===null || p<best.p)) best={p:p,n:it.name};
+      }
+    });
+    document.getElementById("sCalled").textContent = called+" / "+state.items.length;
+    document.getElementById("sOk").textContent = ok;
+    document.getElementById("sBest").textContent = best ? best.p.toLocaleString("th-TH")+" ฿" : "–";
+    summary();
+  }
+
+  function summary(){
+    var icon = {ok:"✅", no:"❌", wait:"🔁"};
+    var lines = ["🏠 Logement Rawai · 10 ม.ค. – 10 มี.ค.", ""];
+    var groups = [["ok","Dispo / ว่าง"],["wait","À rappeler / โทรใหม่"],["no","Pas dispo / ไม่ว่าง"]];
+    groups.forEach(function(g){
+      var rows = state.items.filter(function(it){return it.status===g[0];});
+      if(!rows.length) return;
+      lines.push(g[1]+" :");
+      rows.forEach(function(it){
+        var l = icon[g[0]]+" "+it.name+" ("+it.tel+")";
+        if(it.price) l += " · "+String(it.price).replace(/[^0-9]/g,"").replace(/\B(?=(\d{3})+(?!\d))/g," ")+" ฿/mois";
+        if(it.note) l += "\n   → "+it.note;
+        lines.push(l);
+      });
+      lines.push("");
+    });
+    var left = state.items.filter(function(it){return !it.called && !it.status;}).length;
+    lines.push("Pas encore appelés / ยังไม่ได้โทร : "+left);
+    var text = lines.join("\n");
+    document.getElementById("preview").textContent = text;
+    var enc = encodeURIComponent(text);
+    document.getElementById("sendWa").href = "https://wa.me/?text="+enc;
+    document.getElementById("sendLine").href = "https://line.me/R/share?text="+enc;
+    return text;
+  }
+
+  document.getElementById("sendCopy").addEventListener("click", function(){
+    var t = summary();
+    try{
+      navigator.clipboard.writeText(t).then(function(){toast("คัดลอกแล้ว ✓");}, function(){toast("คัดลอกไม่ได้");});
+    }catch(e){ toast("คัดลอกไม่ได้"); }
+  });
+
+  // Saving
+  var artifactApi = null, timer = null;
+  try{
+    if(window.claude && window.claude.use){
+      window.claude.use("artifact").then(function(a){ artifactApi = a; }).catch(function(){});
+    }
+  }catch(e){}
+
+  function toast(t){var s=document.getElementById("save");s.textContent=t;s.classList.add("show");clearTimeout(s._t);s._t=setTimeout(function(){s.classList.remove("show");},1500);}
+
+  function save(){
+    state.savedAt = Date.now();
+    try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+    clearTimeout(timer);
+    timer = setTimeout(publish, 1500);
+  }
+  function publish(){
+    if(!artifactApi){ toast("บันทึกแล้ว ✓"); return; }
+    var json = JSON.stringify(state).replace(/</g,"\\u003c");
+    var html = SRC.replace(/(<script type="application\/json" id="state">)[\s\S]*?(<\/script>)/, function(_,a,b){return a+json+b;});
+    Promise.resolve(artifactApi.publish(html)).then(function(){ toast("บันทึกแล้ว ✓"); })
+      .catch(function(){ toast("บันทึกในเครื่องนี้ ✓"); });
+  }
+
+  list.addEventListener("click", function(e){
+    var b = e.target.closest(".status button"); if(!b) return;
+    var card = b.closest(".card"), it = state.items[+card.dataset.i], v = b.dataset.v;
+    it.status = (it.status===v) ? null : v;
+    if(it.status) it.called = true;
+    card.className = "card" + (it.status ? " "+it.status : "");
+    card.querySelectorAll(".status button").forEach(function(x){x.classList.toggle("on", x.dataset.v===it.status);});
+    card.querySelector('[data-k="called"]').checked = !!it.called;
+    stats(); save();
+  });
+  list.addEventListener("change", function(e){
+    var k = e.target.dataset.k; if(!k) return;
+    var it = state.items[+e.target.closest(".card").dataset.i];
+    it[k] = (k==="called") ? e.target.checked : e.target.value;
+    stats(); save();
+  });
+  list.addEventListener("input", function(e){
+    var k = e.target.dataset.k; if(k!=="price" && k!=="note") return;
+    state.items[+e.target.closest(".card").dataset.i][k] = e.target.value;
+    stats();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
