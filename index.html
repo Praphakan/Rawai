@@ -96,20 +96,27 @@
 
 <script type="application/json" id="state">{"items":[
 {"name":"Leks' Lodge","tel":"094-843-4770"},
-{"name":"Baan Pornmae","tel":"098-592-9456"},
 {"name":"Zen Suites","tel":"061-659-0054"},
 {"name":"CALYPSO Condo","tel":"095-271-7172"},
-{"name":"Sawadee Naiharn","tel":"098-880-0988"},
 {"name":"VK House Rawai","tel":"081-693-4611"},
-{"name":"Coconoi Residence","tel":"082-807-2980"},
 {"name":"PAi NoN Village","tel":"02-430-4464"},
-{"name":"Jungle Pad","tel":"082-270-1984"},
-{"name":"SaiyuanBuri","tel":"076-388-351"},
 {"name":"Ton Mai Bungalows","tel":"081-323-7534","note":"ถามว่ามีแอร์ไหม (clim ?)"},
-{"name":"Nature Pine Residence","tel":"081-496-6398"},
 {"name":"Monaburi Boutique Resort","tel":"092-892-2378"},
 {"name":"Namphung Phuket Boutique Resort","tel":"063-380-9366"},
-{"name":"New Breakers Hotel Rawai","tel":"062-989-9694"}
+{"name":"1715 House - White Rhino","tel":"096-651-1337"},
+{"name":"Rawai Condominium By Bayshore","tel":"096-059-0706"},
+{"name":"Kana Hotel Phuket","tel":"096-371-2340"},
+{"name":"Palm Village Phuket","tel":"076-288-081"},
+{"name":"Miracle House","tel":"076-388-355"},
+{"name":"Chanakarn Pool Access Rawai","tel":"096-634-9449"},
+{"name":"BaBa Residence - บาบาเรสซิเด้น","tel":"091-163-9349"},
+{"name":"Nanaphun Resort","tel":"076-388-860"},
+{"name":"Nattapa Rawai Apartments","tel":"083-862-7050"},
+{"name":"Rawai Studio Apartments","tel":"099-358-3413"},
+{"name":"Z&Z Resort","tel":"061-606-9028"},
+{"name":"Phimarn room rental service","tel":"094-593-3129"},
+{"name":"Paradise Apartments","tel":"081-323-7534","note":"เบอร์เดียวกับ Ton Mai Bungalows · même numéro que Ton Mai (1 seul appel)"},
+{"name":"Paradise 4 Soi Saiyuan","tel":"081-323-7534","note":"เบอร์เดียวกับ Ton Mai Bungalows · même numéro que Ton Mai (1 seul appel)"}
 ]}</script>
 
 <script>
@@ -121,7 +128,13 @@
   // Fallback: local copy if the page cannot save itself.
   try{
     var local = JSON.parse(localStorage.getItem(KEY) || "null");
-    if(local && local.savedAt && (!state.savedAt || local.savedAt > state.savedAt)) state = local;
+    if(local && local.savedAt && (!state.savedAt || local.savedAt > state.savedAt)){
+      // Keep her answers, but add any place added to the page since.
+      // Follow the page's list: keep her answers for places still listed, add new ones, drop removed ones.
+      var mine = {}; local.items.forEach(function(it){ mine[it.name] = it; });
+      local.items = state.items.map(function(it){ return mine[it.name] || it; });
+      state = local;
+    }
   }catch(e){}
 
   var list = document.getElementById("list");
